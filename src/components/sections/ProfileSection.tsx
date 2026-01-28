@@ -39,7 +39,19 @@ const ProfileSection: React.FC = () => {
             <div className="flex flex-wrap justify-center lg:justify-start gap-4 animate-fade-in stagger-3">
               <a
                 href={profile.resumeLink}
-                download
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  // First open PDF in new tab, then trigger download after a delay
+                  setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = profile.resumeLink;
+                    link.download = 'Ridoan_Zisan_Resume.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }, 1000);
+                }}
                 className="btn-primary flex items-center gap-2"
               >
                 <Download size={20} />

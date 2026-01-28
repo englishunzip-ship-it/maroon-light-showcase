@@ -171,6 +171,48 @@ const Chatbot: React.FC = () => {
     setIsLoading(false);
   };
 
+  const handleQuickQuestion = async (question: string) => {
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: question,
+      role: 'user',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+    
+    const response = getResponse(question);
+    await typeMessage(response);
+    
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      content: response,
+      role: 'assistant',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, botMessage]);
+    setTypingText('');
+    setIsLoading(false);
+  };
+
+  const quickQuestions = language === 'en' 
+    ? [
+        { label: '📚 Education', query: 'education' },
+        { label: '💼 Experience', query: 'experience' },
+        { label: '🛠️ Skills', query: 'skills' },
+        { label: '📜 Certificates', query: 'certificates' },
+        { label: '📧 Contact', query: 'contact' },
+        { label: '🔬 Research', query: 'research' },
+      ]
+    : [
+        { label: '📚 শিক্ষা', query: 'education' },
+        { label: '💼 অভিজ্ঞতা', query: 'experience' },
+        { label: '🛠️ দক্ষতা', query: 'skills' },
+        { label: '📜 সার্টিফিকেট', query: 'certificates' },
+        { label: '📧 যোগাযোগ', query: 'contact' },
+        { label: '🔬 গবেষণা', query: 'research' },
+      ];
+
   const lang = language === 'en' ? 'en' : 'bn';
 
   return (
@@ -224,23 +266,41 @@ const Chatbot: React.FC = () => {
             {/* Messages */}
             <div className="h-80 overflow-y-auto p-4 space-y-4 bg-secondary/30">
               {messages.length === 0 ? (
-                // Welcome screen
-                <div className="flex flex-col items-center justify-center h-full text-center">
+                // Welcome screen with quick questions
+                <div className="flex flex-col items-center justify-center h-full text-center px-2">
                   <motion.div
                     variants={ghostVariants}
                     animate="float"
-                    className="mb-4"
+                    className="mb-3"
                   >
-                    <Ghost size={48} className="text-primary" />
+                    <Ghost size={40} className="text-primary" />
                   </motion.div>
-                  <h4 className="font-semibold text-foreground mb-2">
+                  <h4 className="font-semibold text-foreground mb-1">
                     {language === 'en' ? 'Welcome!' : 'স্বাগতম!'}
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mb-4">
                     {language === 'en' 
                       ? "Ask me anything about Ridoan Zisan!" 
                       : "রিদোয়ান জিসান সম্পর্কে যেকোনো কিছু জিজ্ঞাসা করুন!"}
                   </p>
+                  
+                  {/* Quick questions */}
+                  <div className="w-full">
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {language === 'en' ? 'Quick questions:' : 'দ্রুত প্রশ্ন:'}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                      {quickQuestions.map((q, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleQuickQuestion(q.query)}
+                          className="px-2 py-1 bg-accent hover:bg-primary/20 text-accent-foreground text-xs rounded-full transition-colors"
+                        >
+                          {q.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <>

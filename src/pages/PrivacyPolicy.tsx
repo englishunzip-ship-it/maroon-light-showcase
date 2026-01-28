@@ -1,12 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Shield, Camera, Type, Copyright, Scale, AlertTriangle, FileText } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Shield, Camera, Type, Copyright, Scale, AlertTriangle, FileText, Globe } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { portfolioData } from '@/data/Portfolio';
 
 const PrivacyPolicy: React.FC = () => {
   const { language } = useLanguage();
+  const [ipAddress, setIpAddress] = useState<string>('');
+  const { profile } = portfolioData;
+
+  useEffect(() => {
+    // Fetch visitor IP address
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => setIpAddress(data.ip))
+      .catch(() => setIpAddress('Unable to detect'));
+  }, []);
 
   const sections = [
     {
@@ -68,14 +77,6 @@ const PrivacyPolicy: React.FC = () => {
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
-            <Link 
-              to="/" 
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
-            >
-              <ArrowLeft size={18} />
-              <span>{language === 'en' ? 'Back to Home' : 'হোমে ফিরে যান'}</span>
-            </Link>
-            
             <div className="flex items-center gap-3 mb-4">
               <div className="p-3 bg-primary/10 rounded-xl">
                 <Shield className="w-8 h-8 text-primary" />
@@ -90,6 +91,15 @@ const PrivacyPolicy: React.FC = () => {
                 ? 'Please read these policies carefully before using this website.' 
                 : 'এই ওয়েবসাইট ব্যবহার করার আগে অনুগ্রহ করে এই নীতিগুলি মনোযোগ সহকারে পড়ুন।'}
             </p>
+
+            {/* Visitor IP Address */}
+            <div className="mt-4 p-3 bg-secondary/50 rounded-lg flex items-center gap-2">
+              <Globe size={16} className="text-primary" />
+              <span className="text-sm text-muted-foreground">
+                {language === 'en' ? 'Your IP Address:' : 'আপনার আইপি ঠিকানা:'}{' '}
+                <span className="font-mono text-foreground">{ipAddress || '...'}</span>
+              </span>
+            </div>
             
             <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
               <p className="text-sm text-amber-800 flex items-start gap-2">
@@ -141,16 +151,14 @@ const PrivacyPolicy: React.FC = () => {
                 : 'এই নীতিগুলি সম্পর্কে আপনার কোনো প্রশ্ন থাকলে বা নির্দিষ্ট ব্যবহারের ক্ষেত্রে অনুমতির প্রয়োজন হলে, অনুগ্রহ করে যোগাযোগ করুন:'}
             </p>
             <a 
-              href="mailto:ridoan.job@gmail.com"
+              href={`mailto:${profile.email}`}
               className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm"
             >
-              ridoan.job@gmail.com
+              {profile.email}
             </a>
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 };
