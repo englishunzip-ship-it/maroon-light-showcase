@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Linkedin, Github, Facebook, Youtube, MessageCircle, Send, ArrowUp, Sparkles, Shield } from 'lucide-react';
+import { Mail, Linkedin, Github, Facebook, Youtube, MessageCircle, Send, ArrowUp, Check, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { portfolioData } from '@/data/Portfolio';
@@ -14,26 +14,18 @@ const Footer: React.FC = () => {
     e.preventDefault();
     if (email) {
       toast(
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-amber-100 rounded-full">
-            <Sparkles className="w-5 h-5 text-amber-500" />
-          </div>
-          <div>
-            <p className="font-semibold text-foreground">
-              {language === 'en' ? 'Successfully Subscribed!' : 'সফলভাবে সাবস্ক্রাইব হয়েছে!'}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {language === 'en' ? 'Thank you for joining our newsletter.' : 'নিউজলেটারে যোগদানের জন্য ধন্যবাদ।'}
-            </p>
-          </div>
+        <div className="flex items-center gap-2">
+          <Check className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium">
+            {language === 'en' ? 'Successfully Subscribed!' : 'সফলভাবে সাবস্ক্রাইব হয়েছে!'}
+          </span>
         </div>,
         {
           style: {
             background: 'hsl(var(--card))',
-            border: '2px solid rgb(251 191 36)',
-            boxShadow: '0 4px 20px rgba(251, 191, 36, 0.2)',
+            border: '1px solid hsl(var(--border))',
           },
-          duration: 4000,
+          duration: 3000,
         }
       );
       setEmail('');
@@ -148,6 +140,17 @@ const Footer: React.FC = () => {
               })}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Signature */}
+      <div className="container mx-auto px-4 py-4 border-t border-border/50">
+        <div className="flex justify-center">
+          <img 
+            src="/signature.png" 
+            alt={language === 'en' ? 'Signature' : 'স্বাক্ষর'}
+            className="h-10 md:h-12 opacity-70 hover:opacity-100 transition-opacity"
+          />
         </div>
       </div>
 

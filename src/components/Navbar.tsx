@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, GraduationCap, Briefcase, Award, Wrench, Users, Mail, BookOpen, FileText, TrendingUp } from 'lucide-react';
+import { X, User, GraduationCap, Briefcase, Award, Wrench, Users, Mail, BookOpen, FileText, TrendingUp, Home } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -34,6 +34,11 @@ const navItems = [
   { key: 'research', icon: FileText, href: '/research', isRoute: true },
 ];
 
+// Check if current page is a sub-page (not main portfolio page)
+const isSubPage = (pathname: string) => {
+  return pathname === '/blog' || pathname === '/research' || pathname === '/privacy-policy';
+};
+
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -63,8 +68,18 @@ const Navbar: React.FC = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Empty placeholder for spacing */}
-          <div className="w-10" />
+          {/* Profile icon for sub-pages */}
+          {isSubPage(location.pathname) ? (
+            <Link
+              to="/"
+              className="p-2 text-foreground/70 hover:text-primary hover:bg-accent rounded-lg transition-all"
+              aria-label="Go to home"
+            >
+              <Home size={22} />
+            </Link>
+          ) : (
+            <div className="w-10" />
+          )}
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
